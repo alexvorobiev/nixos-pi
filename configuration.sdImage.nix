@@ -49,6 +49,16 @@
   #    permitRootLogin = "yes";
   };
 
+  services.unifi = {
+    enable = true;
+    unifiPackage = pkgs.unifi5;
+    openPorts = true;
+
+    # https://github.com/illegalprime/nixos-on-arm/blob/master/images/unifi/default.nix
+    jrePackage = pkgs.jre8_headless; 
+  };
+
+
   programs.zsh = {
       enable = true;
       ohMyZsh = {
