@@ -51,7 +51,8 @@
 
   services.unifi = {
     enable = true;
-    unifiPackage = pkgs.unifi5;
+    # Unifi 5 in 20.09 which is how the image is built in the Action
+    unifiPackage = pkgs.unifiLTS;
     openPorts = true;
 
     # https://github.com/illegalprime/nixos-on-arm/blob/master/images/unifi/default.nix
