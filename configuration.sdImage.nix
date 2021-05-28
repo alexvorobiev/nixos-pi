@@ -26,15 +26,27 @@
 
   # Settings above are the bare minimum
   # All settings below are customized depending on your needs
+  
+  # !!! Adding a swap file is optional, but strongly recommended!
+  swapDevices = [ { device = "/swapfile"; size = 1024; } ];
 
   # systemPackages
-  environment.systemPackages = with pkgs; [ 
-    vim curl wget nano bind kubectl helm iptables openvpn
-    python3 nodejs-12_x docker-compose ];
+  environment.systemPackages = with pkgs; [
+    wget
+    binutils
+    mc
+    nix
+    gitAndTools.gitFull
+    emacs
+    tmux
+    curl 
+    nano 
+    iptables 
+  ];
 
   services.openssh = {
       enable = true;
-      permitRootLogin = "yes";
+  #    permitRootLogin = "yes";
   };
 
   programs.zsh = {
@@ -45,50 +57,34 @@
       };
   };
 
-
-  virtualisation.docker.enable = true;
-
-  networking.firewall.enable = false;
-
   # WiFi
   hardware = {
     enableRedistributableFirmware = true;
     firmware = [ pkgs.wireless-regdb ];
   };
 
-  # Networking
   networking = {
-    # useDHCP = true;
-    interfaces.wlan0 = {
-      useDHCP = false;
-      ipv4.addresses = [{
-        # I used static IP over WLAN because I want to use it as local DNS resolver
-        address = "192.168.100.4";
-        prefixLength = 24;
-      }];
-    };
-    interfaces.eth0 = {
-      useDHCP = true;
-      # I used DHCP because sometimes I disconnect the LAN cable
-      #ipv4.addresses = [{
-      #  address = "192.168.100.3";
-      #  prefixLength = 24;
-      #}];
-    };
+    interfaces.eth0.ipv4.addresses = [ {
+      address = "10.0.1.10";
+      prefixLength = 24;
+    } ];
 
-    # Enabling WIFI
-    wireless.enable = true;
-    wireless.interfaces = [ "wlan0" ];
-    # If you want to connect also via WIFI to your router
-    wireless.networks."WIFI-SSID".psk = "wifipass";
-    # You can set default nameservers
-    nameservers = [ "192.168.100.3" "192.168.100.4" "192.168.100.1" ];
-    # You can set default gateway
-    defaultGateway = {
-      address = "192.168.100.1";
-      interface = "wlan0";
-    };
+    defaultGateway = "10.0.1.1";
+    nameservers =  [ "1.1.1.1" ];
+
+    hostName = "rpi";
+    wireless.enable = false;
+    
+    # needed for remote access to Unifi controller
+    firewall.allowedTCPPorts = [ 8443 ];
   };
+  
+  i18n = {
+    consoleKeyMap = "us";
+    defaultLocale = "en_US.UTF-8";
+  };
+  
+  time.timeZone = "America/Chicago";
 
   # put your own configuration here, for example ssh keys:
   users.defaultUserShell = pkgs.zsh;
@@ -99,17 +95,16 @@
       name = "nixos";
     };
   };
-  users.users = {
-    nixos = {
-      uid = 1000;
-      home = "/home/nixos";
-      name = "nixos";
-      group = "nixos";
-      shell = pkgs.zsh;
-      extraGroups = [ "wheel" "docker" ];
-    };
-  };
-  users.extraUsers.root.openssh.authorizedKeys.keys = [
-     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDqlXJv/noNPmZMIfjJguRX3O+Z39xeoKhjoIBEyfeqgKGh9JOv7IDBWlNnd3rHVnVPzB9emiiEoAJpkJUnWNBidL6vPYn13r6Zrt/2WLT6TiUFU026ANdqMjIMEZrmlTsfzFT+OzpBqtByYOGGe19qD3x/29nbszPODVF2giwbZNIMo2x7Ww96U4agb2aSAwo/oQa4jQsnOpYRMyJQqCUhvX8LzvE9vFquLlrSyd8khUsEVV/CytmdKwUUSqmlo/Mn7ge/S12rqMwmLvWFMd08Rg9NHvRCeOjgKB4EI6bVwF8D6tNFnbsGVzTHl7Cosnn75U11CXfQ6+8MPq3cekYr lucernae@lombardia-N43SM"
-  ];
+  
+  users.extraUsers.alex = {
+    isNormalUser = true;
+    uid = 1000;
+    extraGroups = [ "wheel" ];
+  };  
+
+  system.stateVersion = "unstable";
+
+  nixpkgs.config.oraclejdk.accept_license = true;
+  nixpkgs.config.allowUnfree = true;
+
 }
