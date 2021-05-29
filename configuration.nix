@@ -1,16 +1,5 @@
 { config, pkgs, lib, ... }:
 {
-
-  imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/sd-image-aarch64.nix>
-
-    # For nixpkgs cache
-    <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
-  ];
-
-  sdImage.compressImage = false;
-  
-
   # NixOS wants to enable GRUB by default
   boot.loader.grub.enable = false;
   # Enables the generation of /boot/extlinux/extlinux.conf
@@ -26,7 +15,13 @@
 
   # Settings above are the bare minimum
   # All settings below are customized depending on your needs
-  
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/NIXOS_SD";
+      fsType = "ext4";
+      options = [ "noatime" ];
+    };
+  };
   # !!! Adding a swap file is optional, but strongly recommended!
   swapDevices = [ { device = "/swapfile"; size = 1024; } ];
 
@@ -61,11 +56,11 @@
 
 
   programs.zsh = {
+    enable = true;
+    ohMyZsh = {
       enable = true;
-      ohMyZsh = {
-          enable = true;
-          theme = "bira";
-      };
+      theme = "bira";
+    };
   };
 
   # WiFi
@@ -91,10 +86,9 @@
   };
   
   i18n = {
-    consoleKeyMap = "us";
     defaultLocale = "en_US.UTF-8";
   };
-  
+  console.keyMap = "us";
   time.timeZone = "America/Chicago";
 
   # put your own configuration here, for example ssh keys:
