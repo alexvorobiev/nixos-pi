@@ -54,11 +54,23 @@
   #networking.firewall.enable = false;
 
   # WiFi
+  systemd.services.iwd.serviceConfig.Restart = "always";
   hardware = {
     enableRedistributableFirmware = true;
     firmware = [ pkgs.wireless-regdb ];
   };
-
+  networking = {
+    useDHCP = false;
+    interfaces.wlan0.useDHCP = true;
+    networkmanager.wifi.backend = "iwd";
+    wireless.iwd.enable = true;
+  };
+  boot = {
+    extraModprobeConfig = ''
+      options cf680211 ieee80211_regdom="US"
+    '';
+  };
+  
   i18n = {
     consoleKeyMap = "us";
     defaultLocale = "en_US.UTF-8";
