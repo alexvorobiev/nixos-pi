@@ -26,15 +26,18 @@
 
   # Settings above are the bare minimum
   # All settings below are customized depending on your needs
-
+  
+  # !!! Adding a swap file is optional, but strongly recommended!
+  swapDevices = [ { device = "/swapfile"; size = 1024; } ];
+  
   # systemPackages
   environment.systemPackages = with pkgs; [ 
-    vim curl wget nano bind kubectl helm iptables openvpn
-    python3 nodejs-12_x docker-compose ];
+    vim curl wget nano bind iptables python3 mc tmux
+  ];
 
   services.openssh = {
       enable = true;
-      permitRootLogin = "yes";
+  #    permitRootLogin = "yes";
   };
 
   programs.zsh = {
@@ -46,9 +49,9 @@
   };
 
 
-  virtualisation.docker.enable = true;
+  #virtualisation.docker.enable = true;
 
-  networking.firewall.enable = false;
+  #networking.firewall.enable = false;
 
   # WiFi
   hardware = {
@@ -56,6 +59,13 @@
     firmware = [ pkgs.wireless-regdb ];
   };
 
+  i18n = {
+    consoleKeyMap = "us";
+    defaultLocale = "en_US.UTF-8";
+  };
+  
+  time.timeZone = "America/Chicago";
+  
   # put your own configuration here, for example ssh keys:
   users.defaultUserShell = pkgs.zsh;
   users.mutableUsers = true;
@@ -65,18 +75,15 @@
       name = "nixos";
     };
   };
-  users.users = {
-    nixos = {
-      uid = 1000;
-      home = "/home/nixos";
-      name = "nixos";
-      group = "nixos";
-      shell = pkgs.zsh;
-      extraGroups = [ "wheel" "docker" ];
-    };
-  };
-  users.extraUsers.root.openssh.authorizedKeys.keys = [
-      # Your ssh key
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDqlXJv/noNPmZMIfjJguRX3O+Z39xeoKhjoIBEyfeqgKGh9JOv7IDBWlNnd3rHVnVPzB9emiiEoAJpkJUnWNBidL6vPYn13r6Zrt/2WLT6TiUFU026ANdqMjIMEZrmlTsfzFT+OzpBqtByYOGGe19qD3x/29nbszPODVF2giwbZNIMo2x7Ww96U4agb2aSAwo/oQa4jQsnOpYRMyJQqCUhvX8LzvE9vFquLlrSyd8khUsEVV/CytmdKwUUSqmlo/Mn7ge/S12rqMwmLvWFMd08Rg9NHvRCeOjgKB4EI6bVwF8D6tNFnbsGVzTHl7Cosnn75U11CXfQ6+8MPq3cekYr lucernae@lombardia-N43SM"
-  ];
+  
+  users.extraUsers.alex = {
+    isNormalUser = true;
+    uid = 1000;
+    extraGroups = [ "wheel" ];
+  };  
+
+  #users.extraUsers.root.openssh.authorizedKeys.keys = [
+  #    # Your ssh key
+  #    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDqlXJv/noNPmZMIfjJguRX3O+Z39xeoKhjoIBEyfeqgKGh9JOv7IDBWlNnd3rHVnVPzB9emiiEoAJpkJUnWNBidL6vPYn13r6Zrt/2WLT6TiUFU026ANdqMjIMEZrmlTsfzFT+OzpBqtByYOGGe19qD3x/29nbszPODVF2giwbZNIMo2x7Ww96U4agb2aSAwo/oQa4jQsnOpYRMyJQqCUhvX8LzvE9vFquLlrSyd8khUsEVV/CytmdKwUUSqmlo/Mn7ge/S12rqMwmLvWFMd08Rg9NHvRCeOjgKB4EI6bVwF8D6tNFnbsGVzTHl7Cosnn75U11CXfQ6+8MPq3cekYr lucernae@lombardia-N43SM"
+  #];
 }
