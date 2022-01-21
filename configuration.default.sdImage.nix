@@ -63,7 +63,10 @@
     useDHCP = false;
     interfaces.wlan0.useDHCP = true;
     networkmanager.wifi.backend = "iwd";
-    wireless.iwd.enable = true;
+    wireless = {
+      enable = false;
+      iwd.enable = true;
+    };
   };
   boot = {
     extraModprobeConfig = ''
