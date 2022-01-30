@@ -17,7 +17,7 @@
   boot.loader.generic-extlinux-compatible.enable = true;
  
   # !!! Set to specific linux kernel version
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_5_16;
 
   # !!! Needed for the virtual console to work on the RPi 3, as the default of 16M doesn't seem to be enough.
   # If X.org behaves weirdly (I only saw the cursor) then try increasing this to 256M.
