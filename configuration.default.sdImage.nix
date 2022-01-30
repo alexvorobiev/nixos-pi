@@ -30,6 +30,8 @@
   # !!! Adding a swap file is optional, but strongly recommended!
   swapDevices = [ { device = "/swapfile"; size = 1024; } ];
   
+  nixpkgs.config.allowBroken = true;
+  
   # systemPackages
   environment.systemPackages = with pkgs; [ 
     vim curl wget nano bind iptables python3 mc tmux
