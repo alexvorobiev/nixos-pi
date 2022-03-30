@@ -69,7 +69,7 @@
 
   systemd.services.iwd.serviceConfig.Restart = "always";
   hardware = {
-    enableRedistributableFirmware = false;
+    enableRedistributableFirmware = lib.mkForce false;
     firmware = [ pkgs.raspberrypiWirelessFirmware ];
   };
   networking = {
